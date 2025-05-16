@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const gameRoutes = require("./Routes/gameRoutes");
 
 const app = express();
 const PORT = 3000;
@@ -14,6 +15,8 @@ app.get("/api/test", (request,response) => {
         message: "Backend is working!"
     });
 });
+
+app.use("/api", gameRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
