@@ -1,23 +1,27 @@
 const { v4: uuidv4 } = require("uuid");
 const { getRandomWord, scrambleWord, sessions } = require("../utils/wordBank");
 
-exports.getWord = (req, res) => {
+exports.getWord = (request, response) => {
   const word = getRandomWord();
   const scrambled = scrambleWord(word);
   const id = uuidv4();
 
   sessions[id] = word;
 
-  res.json({ id, scrambled });
+  response.json({ id, scrambled });
 };
 
-exports.checkGuess = (req, res) => {
-  const { id, guess } = req.body;
+exports.checkGuess = (request, response) => {
+  const { id, guess } = request.body;
 
   if (!sessions[id]) {
-    return res.status(400).json({ error: "Invalid session ID" });
+    return response.status(400).json({ error: "Invalid session ID" });
   }
 
   const correct = sessions[id].toLowerCase() === guess.toLowerCase();
-  res.json({ correct });
+    response.json({
+    correct,
+    message: correct ? "Correct!" : "Incorrect!"
+});
+
 };
