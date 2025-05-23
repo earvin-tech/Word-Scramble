@@ -18,7 +18,12 @@ exports.checkGuess = (request, response) => {
     return response.status(400).json({ error: "Invalid session ID" });
   }
 
+  if (typeof guess !== 'string' || guess.trim() === '') {
+    return response.status(400).json({ error: "Missing or invalid guess" });
+  }
+
   const correct = sessions[id].toLowerCase() === guess.toLowerCase();
+    delete sessions[id];
     response.json({
     correct,
     message: correct ? "Correct!" : "Incorrect!"
