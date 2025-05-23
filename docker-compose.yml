@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  api:
+    build: ./server
+    container_name: word-scramble-api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
