@@ -19,5 +19,4 @@ describe('GET /api/word', () => {
       expect(res.body.scrambled.length).toBeGreaterThan(1);
     }
   });
-
 });

@@ -70,7 +70,7 @@ describe('POST /api/guess', () => {
 
   expect(res.statusCode).toBe(200);
   expect(res.body).toHaveProperty('correct', true);
-});
+  });
 
 it('should not allow reusing session after correct guess (if enforced)', async () => {
   const wordRes = await request(app).get('/api/word');
@@ -85,9 +85,6 @@ it('should not allow reusing session after correct guess (if enforced)', async (
     .post('/api/guess')
     .send({ id, guess: original });
 
-  expect(res.statusCode).toBe(400); // or 404 depending on your logic
-});
-
-
-
+  expect(res.statusCode).toBe(400);
+  });
 });
