@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
-const { getRandomWord, scrambleWord, sessions } = require("../utils/wordBank");
+const { getRandomWord, scrambleWord, sessions } = require("../Utils/wordBank");
 
 exports.getWord = (request, response) => {
   const word = getRandomWord();
