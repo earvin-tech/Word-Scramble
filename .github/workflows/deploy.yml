@@ -11,6 +11,7 @@ jobs:
   deploy:
     name: Build, Push to ECR, and Deploy to ECS
     runs-on: ubuntu-latest
+
     env:
       AWS_REGION: ap-southeast-2
 
@@ -32,6 +33,9 @@ jobs:
           else
             echo "IMAGE_TAG=v3" >> $GITHUB_ENV
           fi
+
+      - name: Set full image names
+        run: |
           echo "CLIENT_IMAGE=${{ secrets.ECR_CLIENT_REPO }}:$IMAGE_TAG" >> $GITHUB_ENV
           echo "API_IMAGE=${{ secrets.ECR_API_REPO }}:$IMAGE_TAG" >> $GITHUB_ENV
 
