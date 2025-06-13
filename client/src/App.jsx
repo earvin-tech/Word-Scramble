@@ -1,4 +1,4 @@
-import ScrambleGame from "./components/scrambleGame";
+import ScrambleGame from "./components/ScrambleGame";
 
 function App() {
   return (
