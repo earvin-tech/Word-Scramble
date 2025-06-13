@@ -11,4 +11,5 @@ FROM nginx:stable-alpine
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 EXPOSE 80
+COPY public/health/index.html /usr/share/nginx/html/health.html
 CMD ["nginx", "-g", "daemon off;"]

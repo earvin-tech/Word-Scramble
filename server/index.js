@@ -14,6 +14,10 @@ app.get("/api/test", (request,response) => {
     });
 });
 
+app.get('/api/health', (req, res) => {
+  res.status(200).send('API is healthy');
+});
+
 app.use("/api", gameRoutes);
 
 module.exports = app;
