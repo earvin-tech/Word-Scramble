@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule: 
+    - cron: '30 14 * * *' # 12:30am AEST
 
 jobs:
   deploy:
@@ -12,11 +14,11 @@ jobs:
 
     env:
       AWS_REGION: ap-southeast-2
-      IMAGE_TAG: v3
+      IMAGE_TAG: ${{ github.event_name == 'schedule' && 'nightly' || 'v3'  }}
 
       # Image names with tag
-      CLIENT_IMAGE: ${{ secrets.ECR_CLIENT_REPO }}:v3
-      API_IMAGE: ${{ secrets.ECR_API_REPO }}:v3
+      CLIENT_IMAGE: ${{ secrets.ECR_CLIENT_REPO }}:${{ env.IMAGE_TAG }}
+      API_IMAGE: ${{ secrets.ECR_API_REPO }}:${{ env.IMAGE_TAG }}
 
     steps:
       - name: Checkout code
