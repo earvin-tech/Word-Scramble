@@ -34,6 +34,47 @@ POST   | /api/guess| Submit a guess with session ID.
 
 ![incorrect](/misc/incorrectGuess.png) Incorrect guess
 
+## CI/CD (.github/workflows/ci.yml)
+
+This workflow ensures that the application is tested and build-ready on every code push or pull request.
+
+### Key Features
+
+- Run automatically on:
+  - Push to main
+  - Pull request to main
+  - Manual Trigger 
+  
+- Backend tests are run on Jest + Supertest
+- All test logs are stored and uploaded as GitHub Actions artifacts
+
+
+## CI/CD (.github/workflows/deploy.yml)
+
+This deployment workflow is triggered on main pushes or manually, and handles the full release process.
+
+### Key Features
+
+- Builds Docker images for
+  - client (React + Vite)
+  - server (Express + Node.js)
+- Tags both images v3
+- Authenticates with Amazon ECR and pushes images
+- Triggers Amazon ECS to force new deployments for 
+  - word-scramble-client-service
+  - word-scramble-api-service
+
+## Tools and Services for CI/CD
+
+Tool               | Purpose                                                | Justification
+---                | ---                                                    |  ---
+GitHub Actions     |  Implement workflow files                              |   Built in to GitHub and has simple yaml-based configuration, supports both CI/CD.
+Docker             |  Containerisation of App                               |   Keeps all dependencies consistent across all environments
+AWS ECR            |  Docker image hosting                                  |   Integrates easily with AWS ECS
+GitHub Secrets     |  Secure credentials                                    |   Keeps AWS keys, repo URLs, and config safe and encrypted
+
+![CI/CD](./misc/README-Diagram.drawio.png)
+
 ## Future features
 
 Feature                     |   Description
