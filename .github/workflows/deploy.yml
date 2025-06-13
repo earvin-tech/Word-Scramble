@@ -14,11 +14,6 @@ jobs:
 
     env:
       AWS_REGION: ap-southeast-2
-      IMAGE_TAG: ${{ github.event_name == 'schedule' && 'nightly' || 'v3'  }}
-
-      # Image names with tag
-      CLIENT_IMAGE: ${{ secrets.ECR_CLIENT_REPO }}:${{ env.IMAGE_TAG }}
-      API_IMAGE: ${{ secrets.ECR_API_REPO }}:${{ env.IMAGE_TAG }}
 
     steps:
       - name: Checkout code
@@ -30,6 +25,16 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set dynamic image tag
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            echo "IMAGE_TAG=nightly" >> $GITHUB_ENV
+          else
+            echo "IMAGE_TAG=v3" >> $GITHUB_ENV
+          fi
+          echo "CLIENT_IMAGE=${{ secrets.ECR_CLIENT_REPO }}:$IMAGE_TAG" >> $GITHUB_ENV
+          echo "API_IMAGE=${{ secrets.ECR_API_REPO }}:$IMAGE_TAG" >> $GITHUB_ENV
 
       - name: Login to Amazon ECR
         run: |
