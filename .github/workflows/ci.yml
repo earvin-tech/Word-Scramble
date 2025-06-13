@@ -25,8 +25,14 @@ jobs:
       - name: Install backend dependencies
         run: npm ci
 
-      - name: Run backend tests
-        run: npm test
+      - name: Run backend tests (save logs)
+        run: npm test | tee jest.log
+
+      - name: Upload backend test log
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jest-log
+          path: server/jest.log
 
   frontend:
     name: Build React Frontend
@@ -45,8 +51,14 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      - name: Run frontend tests
-        run: npm run test -- --coverage
+      - name: Run frontend tests (save logs)
+        run: npm run test -- --coverage | tee vitest.log
+
+      - name: Upload frontend test log
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-vitest-log
+          path: client/vitest.log
 
       - name: Build frontend
         run: npm run build
