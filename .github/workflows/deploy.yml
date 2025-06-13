@@ -1,0 +1,61 @@
+name: Deploy Word Scramble App to AWS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Build, Push to ECR, and Deploy to ECS
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: ap-southeast-2
+      IMAGE_TAG: v3
+
+      # Image names with tag
+      CLIENT_IMAGE: ${{ secrets.ECR_CLIENT_REPO }}:v3
+      API_IMAGE: ${{ secrets.ECR_API_REPO }}:v3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region $AWS_REGION | \
+          docker login --username AWS --password-stdin ${{ secrets.ECR_CLIENT_REPO }}
+          aws ecr get-login-password --region $AWS_REGION | \
+          docker login --username AWS --password-stdin ${{ secrets.ECR_API_REPO }}
+
+      - name: Build and push client image
+        run: |
+          docker build -t $CLIENT_IMAGE ./client
+          docker push $CLIENT_IMAGE
+
+      - name: Build and push API image
+        run: |
+          docker build -t $API_IMAGE ./server
+          docker push $API_IMAGE
+
+      - name: Update ECS client service
+        run: |
+          aws ecs update-service \
+            --cluster ${{ secrets.ECS_CLUSTER_NAME }} \
+            --service ${{ secrets.ECS_CLIENT_SERVICE_NAME }} \
+            --force-new-deployment
+
+      - name: Update ECS API service
+        run: |
+          aws ecs update-service \
+            --cluster ${{ secrets.ECS_CLUSTER_NAME }} \
+            --service ${{ secrets.ECS_API_SERVICE_NAME }} \
+            --force-new-deployment
