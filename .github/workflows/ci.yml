@@ -64,3 +64,25 @@ jobs:
 
       - name: Build frontend
         run: npm run build
+
+  lint:
+    name: Run ESLint for Client and Server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install all dependencies
+        run: |
+          npm --prefix client ci
+          npm --prefix server ci
+
+      - name: Lint client
+        run: npm --prefix client run lint
+
+      - name: Lint server
+        run: npm --prefix server run lint
