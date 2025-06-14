@@ -4,7 +4,7 @@ const app = require('../index');
 describe('POST /api/guess', () => {
   it('should return true for correct guess', async () => {
     const wordRes = await request(app).get('/api/word');
-    const { id, scrambled } = wordRes.body;
+    const { id } = wordRes.body;
 
     // Use the correct original word (look up from session manually or mock if needed)
     const correctWord = require('../Utils/wordBank').sessions[id];

@@ -25,7 +25,7 @@ exports.checkGuess = (request, response) => {
   const correct = sessions[id].toLowerCase() === guess.toLowerCase();
     if (correct) {
     delete sessions[id];
-    };
+    }
     response.json({
     correct,
     message: correct ? "Correct!" : "Incorrect!"
